@@ -1,0 +1,58 @@
+
+services:
+  app:
+    build: ./app
+    ports:
+      - "8000:80"  # Backend disponível na porta 8000
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  react:
+    build: ./react
+    ports:
+      - "3000:3000"  # Front-end React na porta 3000
+    volumes:
+      - ./react:/app
+    environment:
+      - REACT_APP_API_URL=http://app:80  # Link para o backend
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+  web:
+    build: ./web
+    ports:
+      - "8080:80"  # Front-end HTML na porta 8080
+    volumes:
+      - ./web:/usr/share/nginx/html
+    environment:
+      - API_URL=http://app:80  # Link para o backend
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
