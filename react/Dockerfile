@@ -1,20 +1,21 @@
-# react/Dockerfile
-FROM node:18
+# Usando uma imagem base do Node
+FROM node:14
 
-# Define o diretório de trabalho no container
+# Definindo o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
-# Copia os arquivos de configuração do package.json e package-lock.json
+# Copiando o package.json e package-lock.json para o contêiner
 COPY package*.json ./
 
-# Instala as dependências do projeto
+# Instalando as dependências do projeto
 RUN npm install
+RUN npm install react-router-dom
 
-# Copia o restante do código da aplicação para o container
+# Copiando o restante do código para o contêiner
 COPY . .
 
-# Exponha a porta 3000 (usada pelo React)
+# Expondo a porta que o React usará
 EXPOSE 3000
 
-# Comando para rodar a aplicação React
+# Comando para iniciar o servidor
 CMD ["npm", "start"]
