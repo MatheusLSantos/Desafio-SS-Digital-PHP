@@ -4,7 +4,12 @@ FROM php:8.2-apache
 # Instalar as bibliotecas necessárias para o PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    unzip \
+    git \
     && docker-php-ext-install pdo pdo_pgsql
+
+# Instalar o Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copia o código do app PHP para o container
 COPY . /var/www/html
@@ -18,11 +23,20 @@ RUN chmod -R 755 /var/www/html/public
 # Habilitar o mod_rewrite para Laravel (necessário para rotas amigáveis)
 RUN a2enmod rewrite
 
-# Reiniciar o Apache
-RUN service apache2 restart
-
 # Define o diretório de trabalho como o root do Apache
 WORKDIR /var/www/html
+
+# Certifique-se de que o arquivo .env está presente, se não, crie um padrão
+RUN cp .env.example .env
+
+# Instalar as dependências do Laravel com o Composer
+RUN composer install --no-dev --optimize-autoloader
+
+# Criar os diretórios bootstrap/cache e storage, se não existirem
+RUN mkdir -p bootstrap/cache storage
+
+# Ajustar permissões das pastas storage e bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
 # Exponha a porta 80 (usada pelo Apache no container)
 EXPOSE 80
