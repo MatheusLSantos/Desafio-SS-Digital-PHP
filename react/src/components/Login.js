@@ -1,36 +1,27 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Lógica para enviar email e senha para o backend
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/login', { email, password });
+      alert(response.data);
+    } catch (error) {
+      console.error('Erro ao logar', error);
+    }
+  };
 
-    return (
-        <div className="login-container">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="email" 
-                    placeholder="Email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    required 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Senha" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                />
-                <button type="submit">Entrar</button>
-            </form>
-        </div>
-    );
-};
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Senha" required />
+      <button type="submit">Entrar</button>
+    </form>
+  );
+}
 
 export default Login;
