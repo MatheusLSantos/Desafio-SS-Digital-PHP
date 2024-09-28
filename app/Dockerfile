@@ -32,11 +32,16 @@ RUN cp .env.example .env
 # Instalar as dependências do Laravel com o Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Criar os diretórios bootstrap/cache e storage, se não existirem
-RUN mkdir -p bootstrap/cache storage
+# Criar diretórios storage e bootstrap/cache, ajustar permissões
+RUN mkdir -p bootstrap/cache storage \
+    && chmod -R 775 storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
 
-# Ajustar permissões das pastas storage e bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+# Gerar a chave do aplicativo Laravel
+RUN php artisan key:generate
 
 # Exponha a porta 80 (usada pelo Apache no container)
 EXPOSE 80
+
+# Comando de entrada
+CMD ["apache2-foreground"]

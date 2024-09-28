@@ -5,6 +5,9 @@ services:
       - "8000:80"  # Backend disponível na porta 8000
     volumes:
       - ./app:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/storage
+      - /var/www/html/bootstrap/cache
     depends_on:
       - db
     networks:
@@ -13,13 +16,13 @@ services:
   db:
     image: postgres:14
     environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=matheus
+      - POSTGRES_USER=matheus
+      - POSTGRES_PASSWORD=090807
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT}:5432"
+      - "54320:5432"
     networks:
       - app-network
 
@@ -29,6 +32,7 @@ services:
       - "3000:3000"  # Front-end React na porta 3000
     volumes:
       - ./react:/app
+      - /app/node_modules
     environment:
       - REACT_APP_API_URL=http://app:80  # Link para o backend
     depends_on:
