@@ -30,7 +30,7 @@ WORKDIR /var/www/html
 RUN cp .env.example .env
 
 # Instalar as dependências do Laravel com o Composer
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install
 
 # Criar diretórios storage e bootstrap/cache, ajustar permissões
 RUN mkdir -p bootstrap/cache storage \
@@ -39,6 +39,9 @@ RUN mkdir -p bootstrap/cache storage \
 
 # Gerar a chave do aplicativo Laravel
 RUN php artisan key:generate
+
+# Gerar a chave JWT (adicionando esta linha)
+RUN php artisan jwt:secret
 
 # Exponha a porta 80 (usada pelo Apache no container)
 EXPOSE 80

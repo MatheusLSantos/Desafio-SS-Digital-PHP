@@ -1,18 +1,18 @@
 <?php
+
 namespace App\Models;
 
-use PDO;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User {
-    private $pdo;
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable;
 
-    public function __construct() {
-        $this->pdo = new PDO('pgsql:host=localhost;dbname=matheus', 'matheus', 'password');
-    }
+    // Define fillable fields for mass assignment
+    protected $fillable = ['email', 'password', 'activation_code', 'email_verified_at', 'remember_token'];
 
-    public function findByEmail($email) {
-        $stmt = $this->pdo->prepare("SELECT * FROM matheus_usuarios WHERE email = :email");
-        $stmt->execute(['email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    // Hide attributes when casting to array or JSON (e.g., API responses)
+    protected $hidden = ['password'];
 }
