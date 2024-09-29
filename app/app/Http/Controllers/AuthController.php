@@ -61,6 +61,19 @@ class AuthController extends Controller
             'email'=> 'required|email',
             'password'=> 'required|string'
         ]);
+
+        // Verificar se o usuário já existe no banco de dados
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            // Se o usuário já existir, enviar o código de ativação novamente
+            Mail::to($request->email)->send(new UserRegistrationMail($user->activation_code));
+            return response()->json([
+                'message' => 'Usuário já existe. Verifique seu e-mail para ativar sua conta novamente.',
+            ]);
+        }
+
+        // Caso o usuário não exista, cria um novo registro
         $user = User::create([
             'email'=>$request -> email,
             'password'=>Hash::make($request->password),
@@ -69,7 +82,7 @@ class AuthController extends Controller
         Mail::to($request->email)->send(new UserRegistrationMail($user->activation_code));
         return response()->json([
             'message' => 'Usuário registrado. Verifique seu e-mail para ativar sua conta.',
-            ]);
+        ]);
     }
 
     public function activate(Request $request)
@@ -80,7 +93,8 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $request -> email)->first();
         if ($request->activation_code == $user -> activation_code) {
-            $user -> email_verified_at = time();
+            $user -> email_verified_at = now();
+            $user -> save();
             return response()-> json(['message' => 'Conta ativada com sucesso!']);
         } else {
             return response()-> json(['message' => 'Código incorreto'],401);

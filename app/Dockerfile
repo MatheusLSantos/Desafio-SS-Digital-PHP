@@ -37,6 +37,9 @@ RUN mkdir -p bootstrap/cache storage \
     && chmod -R 775 storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
+RUN chmod -R 775 /var/www/html/storage \
+    && chown -R www-data:www-data /var/www/html/storage
+
 # Gerar a chave do aplicativo Laravel
 RUN php artisan key:generate
 
