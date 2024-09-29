@@ -1,33 +1,35 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== passwordConfirmation) {
+      setError("As senhas não coincidem");
+      return;
+    }
+
     try {
-      const response = await axios.post("/login", {
+      const response = await axios.post("/register", {
         email,
         password,
+        password_confirmation: passwordConfirmation,
       });
-      // Sucesso no login
-      const { token, user } = response.data;
-      localStorage.setItem("token", token);
-      // Redireciona para a página de boas-vindas
-      navigate("/welcome", { state: { user } });
+      setMessage(response.data.message);
     } catch (error) {
-      setError(error.response?.data.message || "Erro ao fazer login");
+      setError(error.response?.data.message || "Erro ao registrar");
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Registro</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email</label>
@@ -47,11 +49,21 @@ const Login = () => {
             required
           />
         </div>
+        <div>
+          <label>Confirmar Senha</label>
+          <input
+            type="password"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            required
+          />
+        </div>
         {error && <p>{error}</p>}
-        <button type="submit">Entrar</button>
+        {message && <p>{message}</p>}
+        <button type="submit">Registrar</button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;

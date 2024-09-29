@@ -1,10 +1,15 @@
+import React from "react";
+import { useLocation } from "react-router-dom";
+
 const Welcome = () => {
-    return (
-        <div className="welcome-container">
-            <h1>Bem-vindo ao nosso sistema!</h1>
-            <p>Você está logado com sucesso.</p>
-        </div>
-    );
+  const location = useLocation();
+  const user = location.state?.user || {};
+
+  return (
+    <div>
+      <h2>Bem-vindo(a), {user.email}</h2>
+    </div>
+  );
 };
 
 export default Welcome;
