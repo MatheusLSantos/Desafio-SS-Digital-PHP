@@ -1,16 +1,5 @@
 <?php
 
-// CORS Headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Authorization, Origin');
-
-// Handle preflight requests (OPTIONS)
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));

@@ -96,16 +96,17 @@ class UserTest extends TestCase
     /** @test */
     public function test_user_logout()
     {
-        $user = User::factory()->create([
-            'email' => 'user@example.com',
-            'password' => Hash::make('password123'),
-        ]);
+        $user = User::factory()->create();
 
-        $this->actingAs($user);
-        $response = $this->post('/logout');
+        // Gera um token JWT para o usuário
+        $token = JWTAuth::fromUser($user);
 
+        // Faz a requisição de logout com o token no cabeçalho
+        $response = $this->post('/logout', [], ['Authorization' => 'Bearer ' . $token]);
+
+        // Verifica se o logout foi bem-sucedido
         $response->assertStatus(200)
-                 ->assertJson(['message' => 'Logout realizado com sucesso.']);
+                ->assertJson(['message' => 'Logout realizado com sucesso.']);
 
         $this->assertGuest();
     }

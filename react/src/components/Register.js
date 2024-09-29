@@ -14,12 +14,12 @@ const Register = () => {
       setError("As senhas não coincidem");
       return;
     }
-
+    console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
     try {
-      const response = await axios.post("/register", {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${apiUrl}/register`, {
         email,
         password,
-        password_confirmation: passwordConfirmation,
       });
       setMessage(response.data.message);
     } catch (error) {

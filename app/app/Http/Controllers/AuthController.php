@@ -21,7 +21,13 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if ($token = Auth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
+            // Falha na autenticação
+            return response()->json([
+                'message' => 'As credenciais fornecidas estão incorretas.',
+                ],401);
+        }
+        else {
             // Autenticação bem-sucedida
             $user = auth()->user();
 
@@ -39,20 +45,22 @@ class AuthController extends Controller
                 ]
                 ]);
         }
-
-        // Falha na autenticação
-        return response()->json([
-            'message' => 'As credenciais fornecidas estão incorretas.',
-            ],401);
     }
 
     public function logout(Request $request)
     {
-        // logout bem-sucedido
-        auth()->logout();
-        return response()->json([
-            'message' => 'Logout realizado com sucesso.',
+        try {
+            // Invalida o token atual, fazendo o logout do usuário
+            JWTAuth::invalidate(JWTAuth::getToken());
+    
+            return response()->json([
+                'message' => 'Logout realizado com sucesso.',
             ]);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json([
+                'message' => 'Falha ao realizar o logout, token inválido.',
+            ], 500);
+        }
     }
 
     public function register(Request $request)
