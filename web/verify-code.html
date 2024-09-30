@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirme o Código</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="container" style="max-width: 400px; margin-top: 100px;">
+    <div class="text-center mb-4">
+        <h4>Confirme o Código</h4>
+    </div>
+    <form id="verifyCodeForm">
+        <div class="form-group">
+            <label for="activation_code">Código</label>
+            <input type="text" class="form-control" id="activation_code" required>
+        </div>
+        <div id="error" class="alert alert-danger" style="display: none;"></div>
+        <div id="success" class="alert alert-success" style="display: none;"></div>
+        <button type="submit" class="btn btn-primary btn-block">Verificar Código</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('verifyCodeForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const activation_code = document.getElementById('activation_code').value;
+        const email = localStorage.getItem("email");
+
+        const errorDiv = document.getElementById('error');
+        const successDiv = document.getElementById('success');
+
+        if (!email) {
+            errorDiv.textContent = "Email não encontrado. Por favor, registre-se novamente.";
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:8000/activate', {email, activation_code });
+            successDiv.textContent = response.data.message;
+            successDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+
+            // Redireciona para a página de login
+            window.location.href = '/index.html'; 
+        } catch (error) {
+            errorDiv.textContent = error.response?.data.message || "Erro ao confirmar código";
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

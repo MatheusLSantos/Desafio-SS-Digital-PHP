@@ -3,13 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
-    <title>Boas-vindas</title>
+    <title>Bem-vindo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Bem-vindo ao nosso sistema!</h1>
-        <p class="text-center">Você está logado com sucesso.</p>
+
+<div class="container" style="max-width: 600px; margin-top: 100px;">
+    <div class="text-center">
+        <h4>Bem-vindo(a), <span id="email"></span></h4>
+        <button id="logout" class="btn btn-secondary mt-3">Logout</button>
     </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtenha o email do localStorage
+        const email = localStorage.getItem("email");
+        document.getElementById('email').textContent = email;
+
+        document.getElementById('logout').addEventListener('click', function() {
+            // Remova o token e o email do localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("email");
+
+            // Redirecione para a tela de login
+            window.location.href = '/index.html'; 
+        });
+    });
+</script>
+
 </body>
 </html>
