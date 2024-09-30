@@ -7,7 +7,6 @@ const Welcome = () => {
   const email = localStorage.getItem("email");
 
   const handleLogout = () => {
-    // Remova o token do localStorage ou qualquer outro estado que você use para autenticação
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     
