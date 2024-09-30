@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { TextField, Button, Container, Typography, Box, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -25,7 +26,6 @@ const Register = () => {
         password_confirmation: passwordConfirmation,
       });
       setMessage(response.data.message);
-
       // Passar o email para a próxima tela
       navigate("/verify-code", { state: { email } });
     } catch (error) {
@@ -34,41 +34,44 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
+    <Container maxWidth="xs">
+      <Box mt={5} textAlign="center">
+        <Typography variant="h4" gutterBottom>Registro</Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Email"
+            fullWidth
+            margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Senha</label>
-          <input
+          <TextField
+            label="Senha"
             type="password"
+            fullWidth
+            margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Confirmar Senha</label>
-          <input
+          <TextField
+            label="Confirmar Senha"
             type="password"
+            fullWidth
+            margin="normal"
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
-        </div>
-        {error && <p>{error}</p>}
-        {message && <p>{message}</p>}
-        <button type="submit">Registrar</button>
-      </form>
-    </div>
+          {error && <Alert severity="error">{error}</Alert>}
+          {message && <Alert severity="success">{message}</Alert>}
+          <Button variant="contained" color="primary" type="submit" fullWidth>
+            Registrar
+          </Button>
+        </form>
+      </Box>
+    </Container>
   );
 };
 

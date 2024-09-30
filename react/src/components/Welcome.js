@@ -1,24 +1,29 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Container, Button, Typography, Box } from "@mui/material";
 
 const Welcome = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const user = location.state?.user || {};
+  const email = localStorage.getItem("email");
 
   const handleLogout = () => {
     // Remova o token do localStorage ou qualquer outro estado que você use para autenticação
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
     
     // Redirecione para a tela de login
     navigate("/login");
   };
 
   return (
-    <div>
-      <h2>Bem-vindo(a), {user.email}</h2>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <Container maxWidth="sm">
+      <Box mt={5} textAlign="center">
+        <Typography variant="h4">Bem-vindo(a), {email}</Typography>
+        <Button onClick={handleLogout} variant="contained" color="secondary" style={{ marginTop: "20px" }}>
+          Logout
+        </Button>
+      </Box>
+    </Container>
   );
 };
 
