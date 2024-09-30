@@ -11,8 +11,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
-      const response = await axios.post(`${apiUrl}/login`, {
+      const response = await axios.post("/login", {
         email,
         password,
       });
@@ -24,6 +23,11 @@ const Login = () => {
     } catch (error) {
       setError(error.response?.data.message || "Erro ao fazer login");
     }
+  };
+
+  const handleRegister = () => {
+    // Navega para a tela de registro
+    navigate("/register");
   };
 
   return (
@@ -51,6 +55,7 @@ const Login = () => {
         {error && <p>{error}</p>}
         <button type="submit">Entrar</button>
       </form>
+      <button onClick={handleRegister}>Registrar</button>
     </div>
   );
 };

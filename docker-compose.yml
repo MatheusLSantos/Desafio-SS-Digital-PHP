@@ -34,7 +34,7 @@ services:
       - ./react:/app
       - /app/node_modules
     environment:
-      - REACT_APP_API_URL=http://app:80  # Link para o backend
+      - REACT_APP_API_URL=http://localhost:8000  # Link para o backend
     depends_on:
       - app
     networks:
@@ -47,7 +47,7 @@ services:
     volumes:
       - ./web:/usr/share/nginx/html
     environment:
-      - API_URL=http://app:80  # Link para o backend
+      - API_URL=http://localhost:8000  # Link para o backend
     depends_on:
       - app
     networks:

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Adiciona a coluna 'activation_code' na tabela 'users'
+        // Remove a coluna 'name' e adiciona a coluna 'activation_code' na tabela 'users'
         Schema::table('users', function (Blueprint $table) {
-            $table->string('activation_code')->nullable()->after('remember_token');
+            $table->dropColumn('name'); // Remove a coluna 'name'
+            $table->string('activation_code')->nullable()->after('remember_token'); // Adiciona a coluna 'activation_code'
         });
     }
 
@@ -22,9 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Remove a coluna 'activation_code'
+        // Restaura a coluna 'name' e remove a coluna 'activation_code'
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('activation_code');
+            $table->string('name')->after('id'); // Adiciona a coluna 'name' de volta
+            $table->dropColumn('activation_code'); // Remove a coluna 'activation_code'
         });
     }
 };

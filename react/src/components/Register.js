@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -7,6 +8,7 @@ const Register = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,14 +16,18 @@ const Register = () => {
       setError("As senhas não coincidem");
       return;
     }
-    console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
       const response = await axios.post(`${apiUrl}/register`, {
         email,
         password,
+        password_confirmation: passwordConfirmation,
       });
       setMessage(response.data.message);
+
+      // Passar o email para a próxima tela
+      navigate("/verify-code", { state: { email } });
     } catch (error) {
       setError(error.response?.data.message || "Erro ao registrar");
     }
